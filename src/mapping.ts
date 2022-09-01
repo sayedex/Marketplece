@@ -17,8 +17,10 @@ import {
 } from "../generated/Marketplace/Marketplace";
 import { fetchBunnyId, fetchName, fetchSymbol, fetchTokenURI } from "./utils/erc721";
 import { toBigDecimal } from "./utils";
-
-
+import { NewAuctionScma,Bid,Mint,NFT,User,Transaction,Collection} from "../generated/schema"
+let ZERO_BI = BigInt.fromI32(0);
+let ONE_BI = BigInt.fromI32(1);
+let ZERO_BD = BigDecimal.fromString("0");
 export function handleNewcollection(event: NewCollection): void {
   let collection = Collection.load(event.params.CollectionNew.toHex());
   if (!collection) {
@@ -36,12 +38,11 @@ export function handleNewcollection(event: NewCollection): void {
 }
 
 
-import { NewAuctionScma,Bid,Mint,NFT,User,Transaction,Collection} from "../generated/schema"
-let ZERO_BI = BigInt.fromI32(0);
-let ONE_BI = BigInt.fromI32(1);
-let ZERO_BD = BigDecimal.fromString("0");
+
+
 export function handleNewAuction(event: NewAuction): void {
-  let token = NewAuctionScma.load(event.params.nftId.toString());
+  let id = event.params.index.toString();
+
   // if(!collection){
   //   collection = new Collection(event.params.addressNFTCollection.toHex())
   // }
@@ -70,27 +71,13 @@ collection.numberTokensListed = collection.numberTokensListed.plus(ONE_BI);
 collection.save();
 
 
-let nft = NFT.load(event.params.addressNFTCollection.toHex() + "-" + event.params.nftId.toString())
-if(!nft){
-  nft  = new NFT(event.params.addressNFTCollection.toHex() + "-" + event.params.nftId.toString())
-}
-nft.tokenId = event.params.nftId;
-collection.nfts = nft.id
-// nft.id = collection.id
-nft.url = fetchTokenURI(event.params.addressNFTCollection, event.params.nftId);
-nft.updatedAt =event.block.timestamp;
-nft.currentAskPrice = toBigDecimal(event.params.BuyNowprice, 18);
-nft.latestTradedPriceInBNB=ZERO_BD;
-nft.totalTrades = ZERO_BI;
-nft.save();
-
 ///Auction..
 
 
 
-
+let token = NewAuctionScma.load(id);
   if (!token) {
-      token = new NewAuctionScma(event.params.nftId.toString())
+      token = new NewAuctionScma(id)
   }
   // token.id = event.transaction.hash.toHexString();
   token.index = event.params.index
@@ -101,17 +88,31 @@ nft.save();
   token.BuyNowprice = event.params.BuyNowprice
   token.endAuction = event.params.endAuction
   token.bidCount = event.params.bidCount
-  token.sold = false
+  token.sold = false;
   token.save();
 
 
-
+  let nft = NFT.load(event.params.addressNFTCollection.toHex() + "-" + event.params.nftId.toString())
+  if(!nft){
+    nft  = new NFT(event.params.addressNFTCollection.toHex() + "-" + event.params.nftId.toString())
+  }
+  nft.tokenId = event.params.nftId;
+  collection.nfts = nft.id
+  // nft.id = collection.id
+  nft.url = fetchTokenURI(event.params.addressNFTCollection, event.params.nftId);
+  nft.updatedAt =event.block.timestamp;
+  nft.currentAskPrice = toBigDecimal(event.params.BuyNowprice, 18);
+  nft.latestTradedPriceInBNB=ZERO_BD;
+  nft.totalTrades = ZERO_BI;
+  nft.auction = token.id;
+  collection.nfts = token.id;
+  nft.save();
   // nft.collection = collection.id;
 }
 
 
 
-export function handleMintnewNFT(event: MintnewNFT): void {
+export function handleMintnewNFTA(event: MintnewNFT): void {
     let id = event.params.tokenId.toString();
     let NewAuction = NewAuctionScma.load(event.params.tokenId.toString());
     if (!NewAuction) {
@@ -142,9 +143,9 @@ Nft.save()
 
 
 export function handleBuyPriceSell(event: BuyPriceSell): void {
-  let token = NewAuctionScma.load(event.params.nftId.toString())
+  let token = NewAuctionScma.load(event.params.auctionIndex.toString())
     if (!token) {
-        token = new NewAuctionScma(event.params.nftId.toString())
+        token = new NewAuctionScma(event.params.auctionIndex.toString())
     }
 
     token.sold = true
@@ -153,8 +154,8 @@ export function handleBuyPriceSell(event: BuyPriceSell): void {
 
 
 export function handleNewBidOnAuction(event: NewBidOnAuction): void {
-  let id = event.params.nftId.toString();
-  let NewAuction = NewAuctionScma.load(event.params.nftId.toString())
+  let id = event.params.addressNFTCollection.toString();
+  let NewAuction = NewAuctionScma.load(event.params.auctionIndex.toString())
   if (!NewAuction) {
     NewAuction = new NewAuctionScma(id)
 }
@@ -172,9 +173,9 @@ order.save();
 
 
 export function handleUpdatebuyprice(event: Updatebuyprice): void {
-  let token = NewAuctionScma.load(event.params.nftId.toString())
+  let token = NewAuctionScma.load(event.params.auctionIndex.toString())
     if (!token) {
-        token = new NewAuctionScma(event.params.nftId.toString())
+        token = new NewAuctionScma(event.params.auctionIndex.toString())
     }
     token.BuyNowprice = event.params.newpirce;
     token.save()

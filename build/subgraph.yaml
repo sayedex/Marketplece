@@ -35,8 +35,6 @@ dataSources:
           handler: handleNewcollection
         - event: BuyPriceSell(address,address,address,uint256,uint256,bool,uint256)
           handler: handleBuyPriceSell
-        - event: MintnewNFT(uint256,address,string)
-          handler: handleMintnewNFT
         - event: NewAuction(uint256,address,address,uint256,address,address,uint256,uint256,uint256,uint256,bool)
           handler: handleNewAuction
         - event: NewBidOnAuction(address,uint256,uint256,uint256)

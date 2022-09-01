@@ -42,8 +42,8 @@ dataSources:
         #   handler: handleApprovalForAll
         - event: BuyPriceSell(address,address,address,uint256,uint256,bool,uint256)
           handler: handleBuyPriceSell
-        - event: MintnewNFT(uint256,address,string)
-          handler: handleMintnewNFT
+        # - event: MintnewNFT(uint256,address,string)
+        #   handler: handleMintnewNFT
         # - event: NFTClaimed(uint256,uint256,address)
         #   handler: handleNFTClaimed
         # - event: NFTRefunded(uint256,uint256,address)
