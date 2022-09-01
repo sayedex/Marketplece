@@ -1,20 +1,21 @@
-specVersion: 0.0.1
+specVersion: 0.0.2
 schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum
     name: Marketplace
-    network: ropsten
+    network: rinkeby
     source:
-      address: "0x9d5fe95542FD9aB3822413F62B58B27Bb7e72D20"
+      address: "0xa84a6c745cc6482c7e89dfd6d775B761631faF4D"
       abi: Marketplace
+      startBlock : 	11303262
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
-        - Approval
-        - ApprovalForAll
+        # - Approval
+        # - ApprovalForAll
         - BuyPriceSell
         - MintnewNFT
         - NFTClaimed
@@ -23,34 +24,40 @@ dataSources:
         - NewBidOnAuction
         - Nftselltotopbidder
         - TokensClaimed
-        - Transfer
+        # - Transfer
         - Updatebuyprice
       abis:
         - name: Marketplace
           file: ./abis/Marketplace.json
+        - name: IERC721
+          file: ./abis/IERC721.json
+        - name: PancakeBunnies
+          file: ./abis/PancakeBunnies.json
       eventHandlers:
-        - event: Approval(indexed address,indexed address,indexed uint256)
-          handler: handleApproval
-        - event: ApprovalForAll(indexed address,indexed address,bool)
-          handler: handleApprovalForAll
-        - event: BuyPriceSell(uint256,uint256,bool,uint256)
+        - event : NewCollection(address)
+          handler: handleNewcollection
+        # - event: Approval(indexed address,indexed address,indexed uint256)
+        #   handler: handleApproval
+        # - event: ApprovalForAll(indexed address,indexed address,bool)
+        #   handler: handleApprovalForAll
+        - event: BuyPriceSell(address,address,address,uint256,uint256,bool,uint256)
           handler: handleBuyPriceSell
         - event: MintnewNFT(uint256,address,string)
           handler: handleMintnewNFT
-        - event: NFTClaimed(uint256,uint256,address)
-          handler: handleNFTClaimed
-        - event: NFTRefunded(uint256,uint256,address)
-          handler: handleNFTRefunded
+        # - event: NFTClaimed(uint256,uint256,address)
+        #   handler: handleNFTClaimed
+        # - event: NFTRefunded(uint256,uint256,address)
+        #   handler: handleNFTRefunded
         - event: NewAuction(uint256,address,address,uint256,address,address,uint256,uint256,uint256,uint256,bool)
           handler: handleNewAuction
-        - event: NewBidOnAuction(uint256,uint256,uint256)
+        - event: NewBidOnAuction(address,uint256,uint256,uint256)
           handler: handleNewBidOnAuction
-        - event: Nftselltotopbidder(uint256,uint256,address,uint256,bool)
+        - event: Nftselltotopbidder(address,uint256,uint256,address,uint256,bool)
           handler: handleNftselltotopbidder
-        - event: TokensClaimed(uint256,uint256,address)
+        - event: TokensClaimed(address,uint256,uint256,address)
           handler: handleTokensClaimed
-        - event: Transfer(indexed address,indexed address,indexed uint256)
-          handler: handleTransfer
-        - event: Updatebuyprice(uint256,uint256,uint256)
+        # - event: Transfer(indexed address,indexed address,indexed uint256)
+        #   handler: handleTransfer
+        - event: Updatebuyprice(address,uint256,uint256,uint256)
           handler: handleUpdatebuyprice
       file: ./src/mapping.ts

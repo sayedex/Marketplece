@@ -1,0 +1,50 @@
+specVersion: 0.0.2
+schema:
+  file: schema.graphql
+dataSources:
+  - kind: ethereum
+    name: Marketplace
+    network: rinkeby
+    source:
+      address: "0xa84a6c745cc6482c7e89dfd6d775B761631faF4D"
+      abi: Marketplace
+      startBlock: 11303262
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - BuyPriceSell
+        - MintnewNFT
+        - NFTClaimed
+        - NFTRefunded
+        - NewAuction
+        - NewBidOnAuction
+        - Nftselltotopbidder
+        - TokensClaimed
+        - Updatebuyprice
+      abis:
+        - name: Marketplace
+          file: Marketplace/abis/Marketplace.json
+        - name: IERC721
+          file: Marketplace/abis/IERC721.json
+        - name: PancakeBunnies
+          file: Marketplace/abis/PancakeBunnies.json
+      eventHandlers:
+        - event: NewCollection(address)
+          handler: handleNewcollection
+        - event: BuyPriceSell(address,address,address,uint256,uint256,bool,uint256)
+          handler: handleBuyPriceSell
+        - event: MintnewNFT(uint256,address,string)
+          handler: handleMintnewNFT
+        - event: NewAuction(uint256,address,address,uint256,address,address,uint256,uint256,uint256,uint256,bool)
+          handler: handleNewAuction
+        - event: NewBidOnAuction(address,uint256,uint256,uint256)
+          handler: handleNewBidOnAuction
+        - event: Nftselltotopbidder(address,uint256,uint256,address,uint256,bool)
+          handler: handleNftselltotopbidder
+        - event: TokensClaimed(address,uint256,uint256,address)
+          handler: handleTokensClaimed
+        - event: Updatebuyprice(address,uint256,uint256,uint256)
+          handler: handleUpdatebuyprice
+      file: Marketplace/Marketplace.wasm
