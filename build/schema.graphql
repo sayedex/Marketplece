@@ -14,8 +14,9 @@
             sold:Boolean!
     bider: [Bid!]! @derivedFrom(field: "newAuction")
      nftdata: [NFT!]! @derivedFrom(field: "auction")
-    user:[User!]! @derivedFrom(field: "askOrderHistory")
-
+  user:[User!]! @derivedFrom(field: "Newuser")
+# user:User!
+status:Boolean!
 }
   
 
@@ -91,7 +92,7 @@ type NFT @entity{
   tradeVolumeBNB: BigDecimal!
   totalTrades: BigInt!
   transactionHistory: [Transaction!]! @derivedFrom(field: "nft")
-
+  isTradable: Boolean!
   }
 
 
@@ -158,8 +159,8 @@ type User @entity {
   sellTradeHistory: [Transaction!]! @derivedFrom(field: "seller")
 
   "Ask order history"
-  askOrderHistory: NewAuctionScma!
-
+  Newuser: NewAuctionScma!
+  #  auctiona:[NewAuctionScma!]! @derivedFrom(field: "user")
   "Average price of tokens purchased (in BNB)"
   averageTokenPriceInBNBPurchased: BigDecimal!
 

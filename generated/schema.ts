@@ -27,6 +27,7 @@ export class NewAuctionScma extends Entity {
     this.set("endAuction", Value.fromBigInt(BigInt.zero()));
     this.set("bidCount", Value.fromBigInt(BigInt.zero()));
     this.set("sold", Value.fromBoolean(false));
+    this.set("status", Value.fromBoolean(false));
   }
 
   save(): void {
@@ -178,6 +179,15 @@ export class NewAuctionScma extends Entity {
 
   set user(value: Array<string>) {
     this.set("user", Value.fromStringArray(value));
+  }
+
+  get status(): boolean {
+    let value = this.get("status");
+    return value!.toBoolean();
+  }
+
+  set status(value: boolean) {
+    this.set("status", Value.fromBoolean(value));
   }
 }
 
@@ -454,6 +464,7 @@ export class NFT extends Entity {
     this.set("latestTradedPriceInBNB", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("tradeVolumeBNB", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("totalTrades", Value.fromBigInt(BigInt.zero()));
+    this.set("isTradable", Value.fromBoolean(false));
   }
 
   save(): void {
@@ -586,6 +597,15 @@ export class NFT extends Entity {
 
   set transactionHistory(value: Array<string>) {
     this.set("transactionHistory", Value.fromStringArray(value));
+  }
+
+  get isTradable(): boolean {
+    let value = this.get("isTradable");
+    return value!.toBoolean();
+  }
+
+  set isTradable(value: boolean) {
+    this.set("isTradable", Value.fromBoolean(value));
   }
 }
 
@@ -795,7 +815,7 @@ export class User extends Entity {
       "totalFeesCollectedInBNB",
       Value.fromBigDecimal(BigDecimal.zero())
     );
-    this.set("askOrderHistory", Value.fromString(""));
+    this.set("Newuser", Value.fromString(""));
     this.set(
       "averageTokenPriceInBNBPurchased",
       Value.fromBigDecimal(BigDecimal.zero())
@@ -903,13 +923,13 @@ export class User extends Entity {
     this.set("sellTradeHistory", Value.fromStringArray(value));
   }
 
-  get askOrderHistory(): string {
-    let value = this.get("askOrderHistory");
+  get Newuser(): string {
+    let value = this.get("Newuser");
     return value!.toString();
   }
 
-  set askOrderHistory(value: string) {
-    this.set("askOrderHistory", Value.fromString(value));
+  set Newuser(value: string) {
+    this.set("Newuser", Value.fromString(value));
   }
 
   get averageTokenPriceInBNBPurchased(): BigDecimal {

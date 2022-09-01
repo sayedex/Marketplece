@@ -6,9 +6,9 @@ dataSources:
     name: Marketplace
     network: rinkeby
     source:
-      address: "0xa84a6c745cc6482c7e89dfd6d775B761631faF4D"
+      address: "0xe7c6B1a38F9d86F676a8C6b89fCD125C6267d1B6"
       abi: Marketplace
-      startBlock: 11303262
+      startBlock: 11303990
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -33,16 +33,16 @@ dataSources:
       eventHandlers:
         - event: NewCollection(address)
           handler: handleNewcollection
-        - event: BuyPriceSell(address,address,address,uint256,uint256,bool,uint256)
+        - event: BuyPriceSell(uint256,address,address,address,uint256,uint256,bool,uint256)
           handler: handleBuyPriceSell
         - event: NewAuction(uint256,address,address,uint256,address,address,uint256,uint256,uint256,uint256,bool)
           handler: handleNewAuction
-        - event: NewBidOnAuction(address,uint256,uint256,uint256)
+        - event: NewBidOnAuction(uint256,address,uint256,uint256,uint256)
           handler: handleNewBidOnAuction
-        - event: Nftselltotopbidder(address,uint256,uint256,address,uint256,bool)
+        - event: Nftselltotopbidder(uint256,address,uint256,uint256,address,uint256,bool)
           handler: handleNftselltotopbidder
-        - event: TokensClaimed(address,uint256,uint256,address)
+        - event: TokensClaimed(uint256,address,uint256,uint256,address)
           handler: handleTokensClaimed
-        - event: Updatebuyprice(address,uint256,uint256,uint256)
+        - event: Updatebuyprice(uint256,address,uint256,uint256,uint256)
           handler: handleUpdatebuyprice
       file: Marketplace/Marketplace.wasm
