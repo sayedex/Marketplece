@@ -325,32 +325,36 @@ export class Nftselltotopbidder__Params {
     this._event = event;
   }
 
+  get seller(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
   get index(): BigInt {
-    return this._event.parameters[0].value.toBigInt();
+    return this._event.parameters[1].value.toBigInt();
   }
 
   get addressNFTCollection(): Address {
-    return this._event.parameters[1].value.toAddress();
+    return this._event.parameters[2].value.toAddress();
   }
 
   get auctionIndex(): BigInt {
-    return this._event.parameters[2].value.toBigInt();
-  }
-
-  get nftId(): BigInt {
     return this._event.parameters[3].value.toBigInt();
   }
 
-  get claimedBy(): Address {
-    return this._event.parameters[4].value.toAddress();
+  get nftId(): BigInt {
+    return this._event.parameters[4].value.toBigInt();
+  }
+
+  get buyer(): Address {
+    return this._event.parameters[5].value.toAddress();
   }
 
   get price(): BigInt {
-    return this._event.parameters[5].value.toBigInt();
+    return this._event.parameters[6].value.toBigInt();
   }
 
   get sold(): boolean {
-    return this._event.parameters[6].value.toBoolean();
+    return this._event.parameters[7].value.toBoolean();
   }
 }
 

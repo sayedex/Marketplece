@@ -336,6 +336,12 @@
     "inputs": [
       {
         "indexed": false,
+        "internalType": "address",
+        "name": "seller",
+        "type": "address"
+      },
+      {
+        "indexed": false,
         "internalType": "uint256",
         "name": "index",
         "type": "uint256"
@@ -361,7 +367,7 @@
       {
         "indexed": false,
         "internalType": "address",
-        "name": "claimedBy",
+        "name": "buyer",
         "type": "address"
       },
       {

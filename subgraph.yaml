@@ -6,9 +6,9 @@ dataSources:
     name: Marketplace
     network: rinkeby
     source:
-      address: "0xe7c6B1a38F9d86F676a8C6b89fCD125C6267d1B6"
+      address: "0xD06aa59A7248Ad3DF383a02d9063357BF6535494"
       abi: Marketplace
-      startBlock : 	11303990
+      startBlock : 	11309630
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -34,8 +34,8 @@ dataSources:
         - name: PancakeBunnies
           file: ./abis/PancakeBunnies.json
       eventHandlers:
-        - event : NewCollection(address)
-          handler: handleNewcollection
+        # - event : NewCollection(address)
+        #   handler: handleNewcollection
         # - event: Approval(indexed address,indexed address,indexed uint256)
         #   handler: handleApproval
         # - event: ApprovalForAll(indexed address,indexed address,bool)
@@ -52,7 +52,7 @@ dataSources:
           handler: handleNewAuction
         - event: NewBidOnAuction(uint256,address,uint256,uint256,uint256)
           handler: handleNewBidOnAuction
-        - event: Nftselltotopbidder(uint256,address,uint256,uint256,address,uint256,bool)
+        - event: Nftselltotopbidder(address,uint256,address,uint256,uint256,address,uint256,bool)
           handler: handleNftselltotopbidder
         - event: TokensClaimed(uint256,address,uint256,uint256,address)
           handler: handleTokensClaimed
