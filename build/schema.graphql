@@ -73,14 +73,12 @@ type NFT @entity {
 
   "Ask history"
   askHistory: [AskOrder!]! @derivedFrom(field: "nft")
-
+   bidder: [Bid!]! @derivedFrom(field: "bid")
   "isTradable"
   isTradable: Boolean!
 }
 type AskOrder @entity {
   id: ID!
-  index:BigInt!
-  "Block number"
   block: BigInt!
 
   "Timestamp"
@@ -99,8 +97,8 @@ type AskOrder @entity {
   askPrice: BigDecimal!
 
   "Seller"
-  seller: User!
-  bidder: [Bid!]! @derivedFrom(field: "bid")
+  seller: Duser!
+  # bidder: [Bid!]! @derivedFrom(field: "bid")
 }
 
 
@@ -110,12 +108,13 @@ type Bid @entity{
   tokenId:BigInt
   bidowner:Bytes!
   timestamp:BigInt!
-  bid:AskOrder!
+  bid:NFT!
+  active:Boolean!
   }
-type User @entity {
+type Duser @entity {
   "User address"
   id: ID!
-
+  useraddress:String
   "Number of tokens currently listed"
   numberTokensListed: BigInt!
 
@@ -169,10 +168,10 @@ type Transaction @entity {
   netPrice: BigDecimal!
 
   "Buyer"
-  buyer: User!
+  buyer: Duser!
 
   "Seller"
-  seller: User!
+  seller: Duser!
 
   "Whether the buyer used BNB"
   withBNB: Boolean!
