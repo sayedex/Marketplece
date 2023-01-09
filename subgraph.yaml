@@ -4,11 +4,11 @@ schema:
 dataSources:
   - kind: ethereum
     name: NFTKEYMarketplaceV2
-    network: rinkeby
+    network: goerli
     source:
-      address: "0x6eeFdd781Cef85847F696c0BeD22E0475B265bA6"
+      address: "0xBfCe43Fa3990Fb48166A484468C1D93a63F6cDeA"
       abi: NFTKEYMarketplaceV2
-      startBlock : 	11388554
+      startBlock : 		8277940
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -39,7 +39,7 @@ dataSources:
         #   handler: handleApproval
         # - event: ApprovalForAll(indexed address,indexed address,bool)
         #   handler: handleApprovalForAll
-        - event: TokenBought(indexed address,indexed uint256,indexed address,(uint256,uint256,address,uint256),uint256,uint256,address,uint256)
+        - event: TokenBought(indexed address,indexed uint256,indexed address,(uint256,uint256,address,uint256,uint256),uint256,uint256,address,uint256)
           handler: handleBuyPriceSell
         # - event: MintnewNFT(uint256,address,string)
         #   handler: handleMintnewNFT
@@ -47,14 +47,22 @@ dataSources:
         #   handler: handleNFTClaimed
         # - event: NFTRefunded(uint256,uint256,address)
         #   handler: handleNFTRefunded
-        - event: TokenListed(indexed address,indexed uint256,(uint256,uint256,address,uint256),uint256,address)
+        - event: EndTimeUpdate(indexed address,indexed uint256,address,uint256)
+          handler: handleEndtimeUpdate
+        - event: NewCategoryAdded(uint256,string)
+          handler: handleNewCategoryAdded
+        - event: TokenListed(indexed address,indexed uint256,(uint256,uint256,address,uint256,uint256),uint256,address,uint256,uint256)
           handler: handleNewAuction
-        - event: TokenBidEntered(indexed address,indexed uint256,(uint256,uint256,address,uint256),uint256)
+        - event: TokenBidEntered(indexed address,indexed uint256,(uint256,uint256,address,uint256),uint256,uint256)
           handler: handleNewBidOnAuction
         - event: TokenBidWithdrawn(indexed address,indexed uint256,(uint256,uint256,address,uint256))
           handler: handleTokenBidWithdrawn 
         - event : TokenBidAccepted(indexed address,indexed uint256,indexed address,(uint256,uint256,address,uint256),uint256,uint256,address,uint256)
           handler: handleBidaccepted  
+        - event : TokenDelisted(indexed address,indexed uint256,(uint256,uint256,address,uint256,uint256),address)
+          handler: handledelist 
+        - event : Priceupdate(indexed address,indexed uint256,uint256,address,uint256)
+          handler: handleAskUpdate
         # - event: Nftselltotopbidder(address,uint256,address,uint256,uint256,address,uint256,bool)
         #   handler: handleNftselltotopbidder
         # - event: TokensClaimed(uint256,address,uint256,uint256,address)

@@ -10,6 +10,58 @@ import {
   BigInt
 } from "@graphprotocol/graph-ts";
 
+export class EndTimeUpdate extends ethereum.Event {
+  get params(): EndTimeUpdate__Params {
+    return new EndTimeUpdate__Params(this);
+  }
+}
+
+export class EndTimeUpdate__Params {
+  _event: EndTimeUpdate;
+
+  constructor(event: EndTimeUpdate) {
+    this._event = event;
+  }
+
+  get erc721Address(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get tokenId(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
+  }
+
+  get seller(): Address {
+    return this._event.parameters[2].value.toAddress();
+  }
+
+  get timestamp(): BigInt {
+    return this._event.parameters[3].value.toBigInt();
+  }
+}
+
+export class NewCategoryAdded extends ethereum.Event {
+  get params(): NewCategoryAdded__Params {
+    return new NewCategoryAdded__Params(this);
+  }
+}
+
+export class NewCategoryAdded__Params {
+  _event: NewCategoryAdded;
+
+  constructor(event: NewCategoryAdded) {
+    this._event = event;
+  }
+
+  get categoryId(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+
+  get _categoryName(): string {
+    return this._event.parameters[1].value.toString();
+  }
+}
+
 export class OwnershipTransferred extends ethereum.Event {
   get params(): OwnershipTransferred__Params {
     return new OwnershipTransferred__Params(this);
@@ -29,6 +81,40 @@ export class OwnershipTransferred__Params {
 
   get newOwner(): Address {
     return this._event.parameters[1].value.toAddress();
+  }
+}
+
+export class Priceupdate extends ethereum.Event {
+  get params(): Priceupdate__Params {
+    return new Priceupdate__Params(this);
+  }
+}
+
+export class Priceupdate__Params {
+  _event: Priceupdate;
+
+  constructor(event: Priceupdate) {
+    this._event = event;
+  }
+
+  get erc721Address(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get tokenId(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
+  }
+
+  get Price(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
+  }
+
+  get seller(): Address {
+    return this._event.parameters[3].value.toAddress();
+  }
+
+  get timestamp(): BigInt {
+    return this._event.parameters[4].value.toBigInt();
   }
 }
 
@@ -153,6 +239,10 @@ export class TokenBidEntered__Params {
 
   get newbid(): BigInt {
     return this._event.parameters[3].value.toBigInt();
+  }
+
+  get timestamp(): BigInt {
+    return this._event.parameters[4].value.toBigInt();
   }
 }
 
@@ -284,6 +374,10 @@ export class TokenBoughtListingStruct extends ethereum.Tuple {
   get expireTimestamp(): BigInt {
     return this[3].toBigInt();
   }
+
+  get category(): BigInt {
+    return this[4].toBigInt();
+  }
 }
 
 export class TokenDelisted extends ethereum.Event {
@@ -334,6 +428,10 @@ export class TokenDelistedListingStruct extends ethereum.Tuple {
   get expireTimestamp(): BigInt {
     return this[3].toBigInt();
   }
+
+  get category(): BigInt {
+    return this[4].toBigInt();
+  }
 }
 
 export class TokenListed extends ethereum.Event {
@@ -370,6 +468,14 @@ export class TokenListed__Params {
   get seller(): Address {
     return this._event.parameters[4].value.toAddress();
   }
+
+  get timestamp(): BigInt {
+    return this._event.parameters[5].value.toBigInt();
+  }
+
+  get isAuction(): BigInt {
+    return this._event.parameters[6].value.toBigInt();
+  }
 }
 
 export class TokenListedListingStruct extends ethereum.Tuple {
@@ -387,6 +493,10 @@ export class TokenListedListingStruct extends ethereum.Tuple {
 
   get expireTimestamp(): BigInt {
     return this[3].toBigInt();
+  }
+
+  get category(): BigInt {
+    return this[4].toBigInt();
   }
 }
 
@@ -496,6 +606,10 @@ export class NFTKEYMarketplaceV2__getTokenListingResultValidListingStruct extend
   get expireTimestamp(): BigInt {
     return this[3].toBigInt();
   }
+
+  get category(): BigInt {
+    return this[4].toBigInt();
+  }
 }
 
 export class NFTKEYMarketplaceV2__getTokenListingsResultListingsStruct extends ethereum.Tuple {
@@ -513,6 +627,10 @@ export class NFTKEYMarketplaceV2__getTokenListingsResultListingsStruct extends e
 
   get expireTimestamp(): BigInt {
     return this[3].toBigInt();
+  }
+
+  get category(): BigInt {
+    return this[4].toBigInt();
   }
 }
 
@@ -533,6 +651,38 @@ export class NFTKEYMarketplaceV2__royaltyResultValue0Struct extends ethereum.Tup
 export class NFTKEYMarketplaceV2 extends ethereum.SmartContract {
   static bind(address: Address): NFTKEYMarketplaceV2 {
     return new NFTKEYMarketplaceV2("NFTKEYMarketplaceV2", address);
+  }
+
+  CheckListed(erc721Address: Address, tokenId: BigInt): boolean {
+    let result = super.call(
+      "CheckListed",
+      "CheckListed(address,uint256):(bool)",
+      [
+        ethereum.Value.fromAddress(erc721Address),
+        ethereum.Value.fromUnsignedBigInt(tokenId)
+      ]
+    );
+
+    return result[0].toBoolean();
+  }
+
+  try_CheckListed(
+    erc721Address: Address,
+    tokenId: BigInt
+  ): ethereum.CallResult<boolean> {
+    let result = super.tryCall(
+      "CheckListed",
+      "CheckListed(address,uint256):(bool)",
+      [
+        ethereum.Value.fromAddress(erc721Address),
+        ethereum.Value.fromUnsignedBigInt(tokenId)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
   actionTimeOutRangeMax(): BigInt {
@@ -572,6 +722,44 @@ export class NFTKEYMarketplaceV2 extends ethereum.SmartContract {
     let result = super.tryCall(
       "actionTimeOutRangeMin",
       "actionTimeOutRangeMin():(uint256)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  categories(param0: BigInt): string {
+    let result = super.call("categories", "categories(uint256):(string)", [
+      ethereum.Value.fromUnsignedBigInt(param0)
+    ]);
+
+    return result[0].toString();
+  }
+
+  try_categories(param0: BigInt): ethereum.CallResult<string> {
+    let result = super.tryCall("categories", "categories(uint256):(string)", [
+      ethereum.Value.fromUnsignedBigInt(param0)
+    ]);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toString());
+  }
+
+  categoryLength(): BigInt {
+    let result = super.call("categoryLength", "categoryLength():(uint256)", []);
+
+    return result[0].toBigInt();
+  }
+
+  try_categoryLength(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "categoryLength",
+      "categoryLength():(uint256)",
       []
     );
     if (result.reverted) {
@@ -839,7 +1027,7 @@ export class NFTKEYMarketplaceV2 extends ethereum.SmartContract {
   ): NFTKEYMarketplaceV2__getTokenListingResultValidListingStruct {
     let result = super.call(
       "getTokenListing",
-      "getTokenListing(address,uint256):((uint256,uint256,address,uint256))",
+      "getTokenListing(address,uint256):((uint256,uint256,address,uint256,uint256))",
       [
         ethereum.Value.fromAddress(erc721Address),
         ethereum.Value.fromUnsignedBigInt(tokenId)
@@ -859,7 +1047,7 @@ export class NFTKEYMarketplaceV2 extends ethereum.SmartContract {
   > {
     let result = super.tryCall(
       "getTokenListing",
-      "getTokenListing(address,uint256):((uint256,uint256,address,uint256))",
+      "getTokenListing(address,uint256):((uint256,uint256,address,uint256,uint256))",
       [
         ethereum.Value.fromAddress(erc721Address),
         ethereum.Value.fromUnsignedBigInt(tokenId)
@@ -883,7 +1071,7 @@ export class NFTKEYMarketplaceV2 extends ethereum.SmartContract {
   ): Array<NFTKEYMarketplaceV2__getTokenListingsResultListingsStruct> {
     let result = super.call(
       "getTokenListings",
-      "getTokenListings(address,uint256,uint256):((uint256,uint256,address,uint256)[])",
+      "getTokenListings(address,uint256,uint256):((uint256,uint256,address,uint256,uint256)[])",
       [
         ethereum.Value.fromAddress(erc721Address),
         ethereum.Value.fromUnsignedBigInt(from),
@@ -905,7 +1093,7 @@ export class NFTKEYMarketplaceV2 extends ethereum.SmartContract {
   > {
     let result = super.tryCall(
       "getTokenListings",
-      "getTokenListings(address,uint256,uint256):((uint256,uint256,address,uint256)[])",
+      "getTokenListings(address,uint256,uint256):((uint256,uint256,address,uint256,uint256)[])",
       [
         ethereum.Value.fromAddress(erc721Address),
         ethereum.Value.fromUnsignedBigInt(from),
@@ -1124,6 +1312,78 @@ export class ConstructorCall__Outputs {
   }
 }
 
+export class ChangepriceCall extends ethereum.Call {
+  get inputs(): ChangepriceCall__Inputs {
+    return new ChangepriceCall__Inputs(this);
+  }
+
+  get outputs(): ChangepriceCall__Outputs {
+    return new ChangepriceCall__Outputs(this);
+  }
+}
+
+export class ChangepriceCall__Inputs {
+  _call: ChangepriceCall;
+
+  constructor(call: ChangepriceCall) {
+    this._call = call;
+  }
+
+  get erc721Address(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get tokenId(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+}
+
+export class ChangepriceCall__Outputs {
+  _call: ChangepriceCall;
+
+  constructor(call: ChangepriceCall) {
+    this._call = call;
+  }
+}
+
+export class UpdateEndTimeForAuctionCall extends ethereum.Call {
+  get inputs(): UpdateEndTimeForAuctionCall__Inputs {
+    return new UpdateEndTimeForAuctionCall__Inputs(this);
+  }
+
+  get outputs(): UpdateEndTimeForAuctionCall__Outputs {
+    return new UpdateEndTimeForAuctionCall__Outputs(this);
+  }
+}
+
+export class UpdateEndTimeForAuctionCall__Inputs {
+  _call: UpdateEndTimeForAuctionCall;
+
+  constructor(call: UpdateEndTimeForAuctionCall) {
+    this._call = call;
+  }
+
+  get erc721Address(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get tokenId(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+
+  get expireTimestamp(): BigInt {
+    return this._call.inputValues[2].value.toBigInt();
+  }
+}
+
+export class UpdateEndTimeForAuctionCall__Outputs {
+  _call: UpdateEndTimeForAuctionCall;
+
+  constructor(call: UpdateEndTimeForAuctionCall) {
+    this._call = call;
+  }
+}
+
 export class AcceptBidForTokenCall extends ethereum.Call {
   get inputs(): AcceptBidForTokenCall__Inputs {
     return new AcceptBidForTokenCall__Inputs(this);
@@ -1162,6 +1422,36 @@ export class AcceptBidForTokenCall__Outputs {
   _call: AcceptBidForTokenCall;
 
   constructor(call: AcceptBidForTokenCall) {
+    this._call = call;
+  }
+}
+
+export class AddNewCategoryCall extends ethereum.Call {
+  get inputs(): AddNewCategoryCall__Inputs {
+    return new AddNewCategoryCall__Inputs(this);
+  }
+
+  get outputs(): AddNewCategoryCall__Outputs {
+    return new AddNewCategoryCall__Outputs(this);
+  }
+}
+
+export class AddNewCategoryCall__Inputs {
+  _call: AddNewCategoryCall;
+
+  constructor(call: AddNewCategoryCall) {
+    this._call = call;
+  }
+
+  get _categoryName(): string {
+    return this._call.inputValues[0].value.toString();
+  }
+}
+
+export class AddNewCategoryCall__Outputs {
+  _call: AddNewCategoryCall;
+
+  constructor(call: AddNewCategoryCall) {
     this._call = call;
   }
 }
@@ -1427,6 +1717,14 @@ export class ListTokenCall__Inputs {
 
   get expireTimestamp(): BigInt {
     return this._call.inputValues[3].value.toBigInt();
+  }
+
+  get isauction(): BigInt {
+    return this._call.inputValues[4].value.toBigInt();
+  }
+
+  get _category(): BigInt {
+    return this._call.inputValues[5].value.toBigInt();
   }
 }
 

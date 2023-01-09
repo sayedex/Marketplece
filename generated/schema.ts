@@ -305,9 +305,11 @@ export class AskOrder extends Entity {
 
     this.set("block", Value.fromBigInt(BigInt.zero()));
     this.set("timestamp", Value.fromBigInt(BigInt.zero()));
+    this.set("ontime", Value.fromBigInt(BigInt.zero()));
     this.set("collection", Value.fromString(""));
     this.set("nft", Value.fromString(""));
     this.set("askPrice", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("orderType", Value.fromString(""));
     this.set("seller", Value.fromString(""));
   }
 
@@ -355,6 +357,15 @@ export class AskOrder extends Entity {
     this.set("timestamp", Value.fromBigInt(value));
   }
 
+  get ontime(): BigInt {
+    let value = this.get("ontime");
+    return value!.toBigInt();
+  }
+
+  set ontime(value: BigInt) {
+    this.set("ontime", Value.fromBigInt(value));
+  }
+
   get collection(): string {
     let value = this.get("collection");
     return value!.toString();
@@ -373,6 +384,23 @@ export class AskOrder extends Entity {
     this.set("nft", Value.fromString(value));
   }
 
+  get auctionenable(): BigInt | null {
+    let value = this.get("auctionenable");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set auctionenable(value: BigInt | null) {
+    if (!value) {
+      this.unset("auctionenable");
+    } else {
+      this.set("auctionenable", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
   get askPrice(): BigDecimal {
     let value = this.get("askPrice");
     return value!.toBigDecimal();
@@ -380,6 +408,15 @@ export class AskOrder extends Entity {
 
   set askPrice(value: BigDecimal) {
     this.set("askPrice", Value.fromBigDecimal(value));
+  }
+
+  get orderType(): string {
+    let value = this.get("orderType");
+    return value!.toString();
+  }
+
+  set orderType(value: string) {
+    this.set("orderType", Value.fromString(value));
   }
 
   get seller(): string {
@@ -463,6 +500,23 @@ export class Bid extends Entity {
 
   set bidowner(value: Bytes) {
     this.set("bidowner", Value.fromBytes(value));
+  }
+
+  get ontime(): BigInt | null {
+    let value = this.get("ontime");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set ontime(value: BigInt | null) {
+    if (!value) {
+      this.unset("ontime");
+    } else {
+      this.set("ontime", Value.fromBigInt(<BigInt>value));
+    }
   }
 
   get timestamp(): BigInt {

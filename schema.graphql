@@ -3,7 +3,12 @@ enum OrderType {
   Modify
   Cancel
 }
-
+enum TransactionType {
+  Ask
+  Buy
+  Bid
+  Acceptbid
+}
 
 type Collection @entity {
   "ID (address)"
@@ -83,19 +88,19 @@ type AskOrder @entity {
 
   "Timestamp"
   timestamp: BigInt!
-
+  ontime: BigInt!
   "Collection"
   collection: Collection!
 
   "NFT"
   nft: NFT!
-
+  auctionenable:BigInt
   # "Order type"
   # orderType: OrderType!
 
   "Ask Price (in BNB)"
   askPrice: BigDecimal!
-
+  orderType: OrderType!
   "Seller"
   seller: Duser!
   # bidder: [Bid!]! @derivedFrom(field: "bid")
@@ -107,9 +112,11 @@ type Bid @entity{
   bidprice: BigDecimal!
   tokenId:BigInt
   bidowner:Bytes!
+  ontime:BigInt
   timestamp:BigInt!
   bid:NFT!
   active:Boolean!
+
   }
 type Duser @entity {
   "User address"
@@ -175,6 +182,7 @@ type Transaction @entity {
 
   "Whether the buyer used BNB"
   withBNB: Boolean!
+  TransactionName:TransactionType!
 }
 
 

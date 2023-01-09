@@ -16,6 +16,56 @@
       {
         "indexed": true,
         "internalType": "address",
+        "name": "erc721Address",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "seller",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "EndTimeUpdate",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "categoryId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "_categoryName",
+        "type": "string"
+      }
+    ],
+    "name": "NewCategoryAdded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
         "name": "previousOwner",
         "type": "address"
       },
@@ -27,6 +77,43 @@
       }
     ],
     "name": "OwnershipTransferred",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "erc721Address",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "Price",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "seller",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "Priceupdate",
     "type": "event"
   },
   {
@@ -179,6 +266,12 @@
         "internalType": "uint256",
         "name": "newbid",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
       }
     ],
     "name": "TokenBidEntered",
@@ -273,6 +366,11 @@
             "internalType": "uint256",
             "name": "expireTimestamp",
             "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "category",
+            "type": "uint256"
           }
         ],
         "indexed": false,
@@ -344,6 +442,11 @@
             "internalType": "uint256",
             "name": "expireTimestamp",
             "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "category",
+            "type": "uint256"
           }
         ],
         "indexed": false,
@@ -397,6 +500,11 @@
             "internalType": "uint256",
             "name": "expireTimestamp",
             "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "category",
+            "type": "uint256"
           }
         ],
         "indexed": false,
@@ -415,10 +523,87 @@
         "internalType": "address",
         "name": "seller",
         "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "isAuction",
+        "type": "uint256"
       }
     ],
     "name": "TokenListed",
     "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "erc721Address",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "Changeprice",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "erc721Address",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "CheckListed",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "isValid",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "erc721Address",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "expireTimestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "UpdateEndTimeForAuction",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
   },
   {
     "inputs": [
@@ -477,6 +662,19 @@
   {
     "inputs": [
       {
+        "internalType": "string",
+        "name": "_categoryName",
+        "type": "string"
+      }
+    ],
+    "name": "addNewCategory",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "erc721Address",
         "type": "address"
@@ -490,6 +688,38 @@
     "name": "buyToken",
     "outputs": [],
     "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "categories",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "categoryLength",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -889,6 +1119,11 @@
             "internalType": "uint256",
             "name": "expireTimestamp",
             "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "category",
+            "type": "uint256"
           }
         ],
         "internalType": "struct INFTKEYMarketplaceV2.Listing",
@@ -940,6 +1175,11 @@
             "internalType": "uint256",
             "name": "expireTimestamp",
             "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "category",
+            "type": "uint256"
           }
         ],
         "internalType": "struct INFTKEYMarketplaceV2.Listing[]",
@@ -983,6 +1223,16 @@
       {
         "internalType": "uint256",
         "name": "expireTimestamp",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "isauction",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_category",
         "type": "uint256"
       }
     ],

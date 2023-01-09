@@ -1,10 +1,10 @@
 {
-  "name": "Marketplece",
+  "name": "marketplece",
   "license": "UNLICENSED",
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ sayedex/Marketplece",
+    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ sayedex/marketplece",
     "create-local": "graph create --node http://localhost:8020/ sayedex/Marketplece",
     "remove-local": "graph remove --node http://localhost:8020/ sayedex/Marketplece",
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 sayedex/Marketplece"

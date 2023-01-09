@@ -4,7 +4,9 @@ import {
   TokenBought,
   TokenBidEntered,
   TokenBidWithdrawn,
-  TokenBidAccepted
+  TokenBidAccepted,
+  TokenDelisted,
+  Priceupdate
 } from "../generated/NFTKEYMarketplaceV2/NFTKEYMarketplaceV2"
 import { fetchBunnyId, fetchName, fetchSymbol, fetchTokenURI } from "./utils/erc721";
 import { updateCollectionDayData, updateMarketPlaceDayData } from "./utils/dayUpdates";
@@ -75,11 +77,31 @@ token.updatedAt = event.block.timestamp;
 token.currentAskPrice = toBigDecimal(event.params.price, 18);
 token.currentSeller = event.params.seller.toHex();
 token.isTradable = true;
+token.save();
 
+
+//new
+
+
+let bid = Bid.load(event.params.erc721Address.toHex() + "-" + event.params.tokenId.toString())
+if (!bid) {
+ bid = new Bid(event.params.erc721Address.toHex() + "-" + event.params.tokenId.toString());
+  }
+bid.active = false;
+// bid.bidowner = ZERO_ADDRESS;
+bid.bidprice = ZERO_BD
+bid.bid = token.id;
+bid.save()
+//order.bid = token.id
+
+//new
 let order = new AskOrder(event.transaction.hash.toHex());
 order.block = event.block.number;
 // order.index = event.params.index;
-order.timestamp = event.block.timestamp;
+order.ontime = event.block.timestamp;
+order.timestamp = event.params.timestamp;
+order.orderType = "New";
+order.auctionenable = event.params.isAuction;
 order.collection = collection.id;
 order.nft = token.id;
 // order.orderType = "New";
@@ -90,8 +112,62 @@ order.save();
 }
 
 
+export function handleAskUpdate(event: Priceupdate): void {
+  let token = NFT.load(event.params.erc721Address.toHex() + "-" + event.params.tokenId.toString());
+  if (token !== null) {
+    token.updatedAt = event.block.timestamp;
+    token.currentAskPrice = toBigDecimal(event.params.Price, 18);
+    token.save();
+
+    let order = new AskOrder(event.transaction.hash.toHex());
+    order.block = event.block.number;
+    order.ontime = event.block.timestamp;
+    order.timestamp = event.params.timestamp;
+    order.collection = token.collection;
+    order.nft = token.id;
+    order.orderType = "Modify";
+    order.askPrice = toBigDecimal(event.params.Price, 18);
+    order.seller = event.params.seller.toHex();
+    order.save();
+  }
+}
 
 
+
+export function handledelist(event: TokenDelisted): void {
+  let user = User.load(event.params.seller.toHex());
+  if (user !== null) {
+    user.numberTokensListed = user.numberTokensListed.minus(ONE_BI);
+    user.save();
+  }
+
+  let collection = Collection.load(event.params.erc721Address.toHex());
+  if (collection != null) {
+    collection.numberTokensListed = collection.numberTokensListed.minus(ONE_BI);
+    collection.save();
+  }
+
+  let token = NFT.load(event.params.erc721Address.toHex() + "-" + event.params.tokenId.toString());
+  if (token !== null) {
+    token.currentSeller = ZERO_ADDRESS;
+    token.updatedAt = event.block.timestamp;
+    token.currentAskPrice = ZERO_BD;
+    token.isTradable = false;
+    token.save();
+  }
+
+  if (token !== null && collection !== null) {
+    let order = new AskOrder(event.transaction.hash.toHex());
+    order.block = event.block.number;
+    order.timestamp = event.block.timestamp;
+    order.collection = collection.id;
+    order.nft = token.id;
+    order.orderType = "Cancel";
+    order.askPrice = toBigDecimal(ZERO_BI, 18);
+    order.seller = event.params.seller.toHex();
+    order.save();
+  }
+}
 
  export function handleNewBidOnAuction(event: TokenBidEntered): void {
   let tokenConcatId = event.params.erc721Address.toHex() + "-" + event.params.tokenId.toString();
@@ -104,8 +180,11 @@ order.save();
  if (!order) {
    order = new Bid(tokenConcatId);
    }
+  
 order.bidprice = toBigDecimal(event.params.newbid, 18);
 order.active = true;
+order.timestamp = event.params.timestamp;
+order.ontime = event.block.timestamp;
  order.tokenId = event.params.tokenId;
 order.bid = token.id
 order.bidowner = event.transaction.from;
